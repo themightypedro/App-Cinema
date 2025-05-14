@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingresso Confirmado</title>
+</head>
+<body>
+    <h1>✅ Ingresso Confirmado</h1>
+
+    <pre>{{ resumo }}</pre>
+    <img src="{{ url_for('static', filename='ingresso_qr.png') }}" alt="QR Code do Ingresso">
+
+    <br><br>
+    <a href="{{ url_for('index') }}">Comprar outro ingresso</a>
+</body>
+</html>

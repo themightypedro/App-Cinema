@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagamento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #111;
+            color: #fff;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+        }
+        .qr-code {
+            margin-top: 20px;
+        }
+        img {
+            width: 250px;
+        }
+        .top-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.top-button:hover {
+    background-color: #2980b9;
+}
+
+.top-bar {
+    text-align: left;
+    margin-bottom: 20px;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Compra realizada com sucesso!</h1>
+        <p><strong>Filme:</strong> {{ filme['titulo'] }}</p>
+        <p><strong>Horário:</strong> {{ horario }}</p>
+        <p><strong>Assentos:</strong> {{ ', '.join(assentos) }}</p>
+        <p><strong>Valor Total:</strong> R$ {{ valor }}</p>
+
+        {% if qr_code %}
+        <div class="qr-code">
+            <p>Apresente este QR Code na entrada da sala:</p>
+            <img src="{{ url_for('static', filename='qrcodes/' + qr_code) }}" alt="QR Code do ingresso">
+        </div>
+        {% endif %}
+    </div>
+    <div class="top-bar">
+    <a href="{{ url_for('home') }}">
+        <button class="top-button">← Voltar para a Home</button>
+</body>
+</html>
