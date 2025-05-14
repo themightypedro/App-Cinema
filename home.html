@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Escolha seu Filme</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .promocoes {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .promocoes img {
+            width: 90%;
+            max-width: 800px;
+            border-radius: 10px;
+        }
+
+        .carrossel-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filmes {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+        }
+
+        .filme {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 10px;
+            width: 200px;
+            min-width: 200px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .filme:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(255, 255, 255, 0.2);
+        }
+
+        .filme img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .filme h3 {
+            margin: 10px 0 5px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .filme p {
+            margin: 2px 0;
+            font-size: 14px;
+            color: #ccc;
+            text-align: center;
+        }
+
+        .horario-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .horarios {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 5px 0;
+            margin-top: 5px;
+            scroll-behavior: smooth;
+        }
+
+        .horarios::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        .horarios::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 5px;
+        }
+
+        .horarios button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            margin: 3px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .horarios button:hover {
+            background-color: #2980b9;
+        }
+
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0,0,0,0.6);
+            border: none;
+            color: white;
+            font-size: 18px;
+            padding: 8px;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .scroll-left {
+            left: 0;
+        }
+
+        .scroll-right {
+            right: 0;
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+        .filme {
+    position: relative; /* Necessário para a sinopse ser posicionada */
+}
+
+.sinopse {
+    position: absolute;
+    top: 25;
+    left: 25;
+    width: 92%;
+    height: 63%;
+    background-color: rgba(0, 0, 0, 0.85);
+    font-family: Arial, sans-serif;
+    color: #fff;
+    padding: 0;
+    font-size: 25px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 10px;
+    overflow-y: 20px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.filme:hover .sinopse {
+    opacity: 1;
+}
+.top-bar {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.top-bar button {
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.top-bar button:hover {
+    background-color: #2980b9;
+}
+    </style>
+</head>
+<body>
+    <!-- Botão Meus Pedidos -->
+    <div class="top-bar">
+        <a href="{{ url_for('meus_pedidos') }}">
+            <button>Meus Pedidos</button>
+        </a>
+    </div>
+    
+
+    <!-- Promoções -->
+    <div class="promocoes">
+        <img src="{{ url_for('static', filename='promoções/promo1.jpg') }}" alt="Promoção 1">
+    </div>
+
+    <h2>Escolha o Filme e Horário</h2>
+
+    <div class="carrossel-container">
+        <button class="scroll-btn scroll-left" onclick="scrollFilmes(-1)">‹</button>
+        <div class="filmes" id="carrossel">
+            {% for i in range(2) %}
+                {% for filme in filmes %}
+                <div class="filme">
+                    <img src="{{ url_for('static', filename='img/' ~ filme.poster) }}" alt="{{ filme.titulo }}">
+                    <div class="sinopse">
+    <p>{{ filme.sinopse }}</p>
+</div>
+                    <h3>{{ filme.titulo }}</h3>
+                    <p>{{ filme.genero }}</p>
+                    <p><strong>{{ filme.tipo }}</strong> • {{ filme.audio }}</p>
+
+                    <div class="horario-wrapper">
+                        <div class="horarios">
+                            {% for horario in filme.horarios %}
+                            <a href="{{ url_for('selecionar_assentos', filme_id=filme.id, horario=horario) }}">
+                                <button>{{ horario }}</button>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        <button class="scroll-btn scroll-right" onclick="scrollFilmes(1)">›</button>
+    </div>
+
+    <footer>
+        &copy; 2025 CineMaster. Todos os direitos reservados.
+    </footer>
+
+    <script>
+    const carrossel = document.getElementById('carrossel');
+    const filmeWidth = 220; // largura + gap aproximado
+    const scrollStep = 3;
+    const scrollInterval = 10;
+    let isAutoScroll = false;
+    let autoScrollTimer;
+
+    function iniciarAutoScroll() {
+        if (autoScrollTimer) return;
+        autoScrollTimer = setInterval(() => {
+            carrossel.scrollLeft += scrollStep;
+            resetScroll();
+        }, scrollInterval);
+    }
+
+    function pararAutoScroll() {
+        clearInterval(autoScrollTimer);
+        autoScrollTimer = null;
+    }
+
+    function scrollFilmes(direcao) {
+        pararAutoScroll(); // para autoplay ao clicar
+        carrossel.scrollBy({ left: direcao * filmeWidth * 3, behavior: 'smooth' });
+        setTimeout(() => iniciarAutoScroll(), 3000); // espera um pouco para retomar autoplay
+    }
+
+    function resetScroll() {
+        const metade = carrossel.scrollWidth / 2;
+        const limiteEsquerda = filmeWidth;
+        const limiteDireita = carrossel.scrollWidth - carrossel.clientWidth - filmeWidth;
+
+        if (carrossel.scrollLeft <= limiteEsquerda) {
+            carrossel.scrollLeft += metade;
+        } else if (carrossel.scrollLeft >= limiteDireita) {
+            carrossel.scrollLeft -= metade;
+        }
+    }
+
+    carrossel.addEventListener('scroll', () => {
+        if (isAutoScroll) return;
+        clearTimeout(carrossel._scrollEndTimer);
+        carrossel._scrollEndTimer = setTimeout(() => {
+            isAutoScroll = true;
+            resetScroll();
+            isAutoScroll = false;
+        }, 60);
+    });
+
+    carrossel.addEventListener('mouseenter', pararAutoScroll);
+    carrossel.addEventListener('mouseleave', iniciarAutoScroll);
+
+    window.addEventListener('load', () => {
+        carrossel.scrollLeft = carrossel.scrollWidth / 2;
+        iniciarAutoScroll();
+    });
+</script>
+</body>
+</html>

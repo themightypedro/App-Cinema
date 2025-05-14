@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Meus Pedidos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #111;
+            color: #fff;
+            
+        }
+        .pedido {
+            border: 1px solid rgba(0,0,0,0.3);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        img.qr {
+            width: 150px;
+            margin-top: 10px;
+             .pedido p {
+            margin: 5px 0;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }    
+        }
+        .top-button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        }
+
+        .top-button:hover {
+        background-color: #2980b9;
+        }
+
+        .top-bar {
+        text-align: left;
+        margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <h2>Meus Pedidos</h2>
+    
+    {% for pedido in pedidos %}
+<div style="display: flex; align-items: center; gap: 20px; background-color: #1e1e1e; padding: 15px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 0 8px rgba(255,255,255,0.05);">
+    <img src="{{ url_for('static', filename='img/' + pedido.poster) }}" alt="Pôster do filme" style="width: 210px; height: auto; border-radius: 8px;">
+    <div style="color: white;">
+        <p><strong>Filme:</strong> {{ pedido.filme }}</p>
+        <p><strong>Horário:</strong> {{ pedido.horario }}</p>
+        <p><strong>Assentos:</strong> {{ pedido.assentos|join(', ') }}</p>
+        <p><strong>Valor:</strong> R$ {{ "%.2f"|format(pedido.valor) }}</p>
+
+        {% if pedido['qr_code'] %}
+                    <img src="{{ url_for('static', filename='qrcodes/' + pedido['qr_code']) }}" alt="QR Code" style ="width: 150px; height: auto; border-radius: 4px;" class="qr">
+                {% endif %}
+    </div>
+</div>
+{% endfor %}
+<div class="top-bar">
+    <a href="{{ url_for('home') }}">
+        <button class="top-button">← Voltar para a Home</button>
+    </a>
+</div>
+</body>
+</html>
